@@ -19,11 +19,6 @@ namespace DataAccess.Repository
             return query.AsQueryable();
         }
 
-        public List<State> GetStates()
-        {
-            return null; //_Context.States.OrderBy(s => s.Name).ToList();
-        }
-
         public IQueryable<CustomerSummary> GetCustomersSummary(out int totalRecords)
         {
             var query = dbSet

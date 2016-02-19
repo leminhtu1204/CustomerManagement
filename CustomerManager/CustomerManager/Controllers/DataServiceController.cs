@@ -13,18 +13,21 @@ namespace CustomerManager.Controllers
 {
     public class DataServiceController : ApiController
     {
-        CustomerRepository _Repository;
+        private CustomerRepository _CustomerRepository;
+
+        private StateRepository _StateReporitory;
 
         public DataServiceController()
         {
-            _Repository = new CustomerRepository();
+            _CustomerRepository = new CustomerRepository();
+            _StateReporitory = new StateRepository();
         }
 
         [HttpGet]
         [Queryable]
         public HttpResponseMessage Customers()
         {
-            var customers = _Repository.GetCustomers();
+            var customers = _CustomerRepository.GetCustomers();
             var totalRecords = customers.Count();
             HttpContext.Current.Response.Headers.Add("X-InlineCount", totalRecords.ToString());
             return Request.CreateResponse(HttpStatusCode.OK, customers);
@@ -33,7 +36,7 @@ namespace CustomerManager.Controllers
         [HttpGet]
         public HttpResponseMessage States()
         {
-            var states = _Repository.GetStates();
+            var states = _StateReporitory.GetEntities();
             return Request.CreateResponse(HttpStatusCode.OK, states);
         }
 
@@ -42,7 +45,7 @@ namespace CustomerManager.Controllers
         public HttpResponseMessage CustomersSummary()
         {
             int totalRecords;
-            var custSummary = _Repository.GetCustomersSummary(out totalRecords).ToList();
+            var custSummary = _CustomerRepository.GetCustomersSummary(out totalRecords).ToList();
             HttpContext.Current.Response.Headers.Add("X-InlineCount", totalRecords.ToString());
             return Request.CreateResponse(HttpStatusCode.OK, custSummary);
         }
@@ -50,14 +53,14 @@ namespace CustomerManager.Controllers
         [HttpGet]
         public HttpResponseMessage CheckUnique(int id, string property, string value)
         {
-            var opStatus = _Repository.CheckUnique(id, property, value);
+            var opStatus = _CustomerRepository.CheckUnique(id, property, value);
             return Request.CreateResponse(HttpStatusCode.OK, opStatus);
         }
 
         [HttpPost]
         public Customer Login([FromBody]UserLogin userLogin)
         {
-            var customer = _Repository.Login(userLogin.UserName, userLogin.Password);
+            var customer = _CustomerRepository.Login(userLogin.UserName, userLogin.Password);
             return customer;
         }
 
@@ -72,14 +75,14 @@ namespace CustomerManager.Controllers
         [HttpGet]
         public HttpResponseMessage CustomerById(int id)
         {
-            var customer = _Repository.GetCustomerById(id);
+            var customer = _CustomerRepository.GetCustomerById(id);
             return Request.CreateResponse(HttpStatusCode.OK, customer);
         }
 
         // POST api/<controller>
         public HttpResponseMessage PostCustomer([FromBody]Customer customer)
         {
-            var opStatus = _Repository.InsertCustomer(customer);
+            var opStatus = _CustomerRepository.InsertCustomer(customer);
             if (opStatus.Status)
             {
                 var response = Request.CreateResponse(HttpStatusCode.Created, customer);
@@ -93,7 +96,7 @@ namespace CustomerManager.Controllers
         // PUT api/<controller>/5
         public HttpResponseMessage PutCustomer(int id, [FromBody]Customer customer)
         {
-            var opStatus = _Repository.UpdateCustomer(customer);
+            var opStatus = _CustomerRepository.UpdateCustomer(customer);
             if (opStatus.Status)
             {
                 return Request.CreateResponse<Customer>(HttpStatusCode.Accepted, customer);
@@ -104,7 +107,7 @@ namespace CustomerManager.Controllers
         // DELETE api/<controller>/5
         public HttpResponseMessage DeleteCustomer(int id)
         {
-            var opStatus = _Repository.DeleteCustomer(id);
+            var opStatus = _CustomerRepository.DeleteCustomer(id);
 
             if (opStatus.Status)
             {
