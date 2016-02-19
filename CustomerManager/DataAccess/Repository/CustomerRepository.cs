@@ -66,10 +66,10 @@ namespace DataAccess.Repository
 
         public Customer Login(string username, string password)
         {
-            var encrypt = Encrypt(password);
+            //var encrypt = Encrypt(password);
 
             var customer = dbSet
-                    .FirstOrDefault(c => String.Equals(c.UserName.Trim(), username) && c.Password == encrypt);
+                    .FirstOrDefault(c => String.Equals(c.UserName.Trim(), username) && c.Password == password);
 
             return customer;
         }

@@ -43,7 +43,7 @@ namespace CustomerManager.Repository
                     Zip = zip + i,
                     IsAdmin = i == 0,
                     UserName = "leminhtu" + i + "@gmail.com",
-                    Password = "3724923114850596956133245243127987711",
+                    Password = "123456789",
                     Gender = (Gender)Enum.Parse(typeof(Gender), nameGenderHost[2]),
                     Cameras = new Collection<Camera>()
                 };
